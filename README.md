@@ -16,7 +16,7 @@ redx cli from *:8080 \
 As module:
 
 ```js
-let RedX = require ('red-x')
+let RedX = require ('@tsadda25/redx')
 let x = new RedX()
 
 x.from('*:8080')
@@ -145,7 +145,7 @@ So *RedX* is programmable in JavaScript.
 
 
 ```js
-let RedX = require ('red-x')
+let RedX = require ('@tsadda25/redx')
 let x = new RedX()
 
 x.from('*:8080')
