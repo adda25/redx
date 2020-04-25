@@ -1,0 +1,28 @@
+{
+  "name": "red-x",
+  "version": "0.0.1",
+  "description": "RedX is a reverse proxy and server running from cli or module",
+  "keywords": [
+    "reverse proxy",
+    "web server",
+    "application server",
+    "server",
+    "cli"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/adda25/redx.git"
+  },
+  "preferGlobal": true,
+  "bin": {
+    "redx": "index.js"
+  },
+  "author": "Amedeo Setti (http://amedeosetti.com), ProM Facility (https://promfacility.eu)",
+  "license": "MIT",
+  "devDependencies": {}
+}
