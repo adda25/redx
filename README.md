@@ -1,6 +1,6 @@
 # RedX
 
-![redx logo](https://redx.promfacility.eu/img/logo01.png "RedX Logo")
+![redx logo](https://cloudbackup.trentinosviluppo.it/index.php/s/Wk5iAWLQ2nZXMzX/download "RedX Logo")
 
 **Vanilla Node.JS Reverse Proxy and Application Server**
 
