@@ -1,6 +1,6 @@
 # RedX
 
-![redx logo](https://github.com/adda25/redx/img/logo01.png "RedX Logo")
+![redx logo](https://redx.promfacility.eu/img/logo01.png "RedX Logo")
 
 **Vanilla Node.JS Reverse Proxy and Application Server**
 
@@ -114,22 +114,23 @@ Every commucation between master, workers and cli goes through IPC channels.
 
 ### Commands cheat sheet
 
-|command | args | description | example |
-|-|-|-|-|-|
-| configure |[what, key, value] | set RedX general options | configure system workers 8 |
-| define |[key, value] |  define custom macros | define query ... |
-| run | null | start the port binding | run |
-| from | [*ssl*(opt), host:port/location] | create a new unit | from virtualhost.com:80/login |
-| use | [...options] | use additional features | use checks 1 |
-| log | [...options] | set what to log | log request-headers proxy-request |
-| redirect | [code, target] | redirect | redirect 302 http://localhost:8080 |
-| allow | [type, value] | allow only the specified values for type | allow ip 192.168.1.1 |
-| deny | [type, value] | deny only the specified values for type | deny ip 192.168.1.1 |
-| balance | [type] | in case of multiple backends per unit, balance it using type| balance client-ip |
-| proxy | [*ssl*(opt), ...host:port/location ] | proxy the request to the backend | proxy ssl google.com yahoo.com |
-| serve | [dir(opt), localpath] | serve the localpath. if *dir* is present, allow the search| serve dir /absolutepath |
-| exec | [interpeter, pathtoscript, argstopass] | execute an external script | exec python /absolute/script/aa.py §query |
-| request | [type, what, key, value] | modify the content of the request | request hide host |
+| command   | args                                   | description                                                  | example                                   |
+|-----------|----------------------------------------|--------------------------------------------------------------|-------------------------------------------|
+| configure | [what, key, value]                     | set RedX general options                                     | configure system workers 8                |
+| define    | [key, value]                           | define custom macros                                         | define query ...                          |
+| run       | null                                   | start the port binding                                       | run                                       |
+| from      | [*ssl*(opt), host:port/location]       | create a new unit                                            | from virtualhost.com:80/login             |
+| use       | [...options]                           | use additional features                                      | use checks 1                              |
+| log       | [...options]                           | set what to log                                              | log request-headers proxy-request         |
+| redirect  | [code, target]                         | redirect                                                     | redirect 302 http://localhost:8080        |
+| allow     | [type, value]                          | allow only the specified values for type                     | allow ip 192.168.1.1                      |
+| deny      | [type, value]                          | deny only the specified values for type                      | deny ip 192.168.1.1                       |
+| balance   | [type]                                 | in case of multiple backends per unit, balance it using type | balance client-ip                         |
+| proxy     | [*ssl*(opt), ...host:port/location ]   | proxy the request to the backend                             | proxy ssl google.com yahoo.com            |
+| serve     | [dir(opt), localpath]                  | serve the localpath. if *dir* is present, allow the search   | serve dir /absolutepath                   |
+| exec      | [interpeter, pathtoscript, argstopass] | execute an external script                                   | exec python /absolute/script/aa.py §query |
+| request   | [type, what, key, value]               | modify the content of the request                            | request hide host                         |
+
 
 <div id="heading--2-2"/>
 

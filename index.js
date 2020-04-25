@@ -39,63 +39,63 @@
 'use strict'
 
 if (require.main === module) {
-	const args = process.argv.slice(2)
-	let forkRedx = function () {
-		let child_process = require('child_process')
-    	let forker = child_process.fork(__dirname + '/src/redx.js', 
-    		args, {detached: true, silent: true})
-    	forker.disconnect()
-		forker.unref()
-		process.exit()
-	}
+    const args = process.argv.slice(2)
+    let forkRedx = function () {
+        let child_process = require('child_process')
+        let forker = child_process.fork(__dirname + '/src/redx.js', 
+            args, {detached: true, silent: true})
+        forker.disconnect()
+        forker.unref()
+        process.exit()
+    }
     if ((args.length == 1 || args.length == 2) && args[0] == 'start') {
-    	// Start RedX
-    	forkRedx()
+        // Start RedX
+        forkRedx()
     } else if ((args.length == 1 || args.length == 2) && args[0] == 'it') {
-    	// Start RedX without forking
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.start()
+        // Start RedX without forking
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.start()
     } else if (args.length == 1 && args[0] == 'reload') {
-    	// Reload the server
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.reload()
+        // Reload the server
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.reload()
     } else if (args.length == 1 && args[0] == 'restart') {
-    	// Restart the server
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.killWorkers()
-    	setTimeout(function () { forkRedx() }, 2000)
+        // Restart the server
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.killWorkers()
+        setTimeout(function () { forkRedx() }, 2000)
     } else if (args.length == 1 && args[0] == 'stop') {
-    	// Stop the server
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.stop()
+        // Stop the server
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.stop()
     } else if (args.length == 1 && args[0] == 'status') {
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.status()
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.status()
     } else if (args.length == 1 && args[0] == 'version') {
-    	console.log(require('./package.json').version)
+        console.log(require('./package.json').version)
     } else if (args.length == 2 && args[0] == 'show' && args[1] == 'running-config') {
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.showRunningConfig()
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.showRunningConfig()
     } else if (args.length == 2 && args[0] == 'systemd' && args[1] == 'conf') {
-    	console.log(require('./src/systemd/create')(process.cwd()))
+        console.log(require('./src/systemd/create')(process.cwd()))
     } else if (args.length == 2 && args[0] == 'systemd' && args[1] == 'install') {
-    	let fs = require('fs')
-    	let systemdConf = require('./src/systemd/create')(process.cwd())
-    	fs.writeFile('/etc/systemd/system/redx.service', systemdConf, 'utf-8', () => {})
+        let fs = require('fs')
+        let systemdConf = require('./src/systemd/create')(process.cwd())
+        fs.writeFile('/etc/systemd/system/redx.service', systemdConf, 'utf-8', () => {})
     } else if (args.length > 1 && args[0] == 'cli') {
         // Run as cli
-    	let RedX = require('./src/redx')
-    	let redx = new RedX(args)
-    	redx.startCli()   
+        let RedX = require('./src/redx')
+        let redx = new RedX(args)
+        redx.startCli()   
     }
 } else {
-	// Run as module
+    // Run as module
     module.exports = require('./src/redx') 
 }
 
