@@ -1,6 +1,6 @@
 # RedX
 
-![redx logo](https://cloudbackup.trentinosviluppo.it/index.php/s/Wk5iAWLQ2nZXMzX/download "RedX Logo")
+<img src="https://cloudbackup.trentinosviluppo.it/index.php/s/Wk5iAWLQ2nZXMzX/download" alt="RedX Logo" width="200px">
 
 **Vanilla Node.JS Reverse Proxy and Application Server**
 
