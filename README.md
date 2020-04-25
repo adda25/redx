@@ -136,7 +136,7 @@ Every commucation between master, workers and cli goes through IPC channels.
 
 ### Custom step
 
-In all three interaces, you can command a custom *step*.
+In all three interfaces, you can command a custom *step*.
 On the Node module inteface, this is a callback that you define.
 In the other two interfaces, CLI and standalone, you *require* a JavaScript
 file, and the content of the file is executed when needed.
@@ -449,13 +449,13 @@ service redx status
 As module:
 
 ```sh
-npm i --save red-x
+npm i --save @tsadda25/red-x
 ```
 
 Or globally
 
 ```sh
-npm i -g red-x
+npm i -g @tsadda25/red-x
 ```
 
 ### From source:
