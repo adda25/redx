@@ -1,5 +1,3 @@
-# RedX
-
 <img src="https://webadmin.promfacility.eu/uploads/018e8a986030489ea5fc97190e124277.png" alt="RedX Logo" width="150px">
 
 
