@@ -34,7 +34,7 @@ class StatCollector {
 		this.stats.servers[data['port']].units = data.units
 		this.stats.servers[data['port']].totalRequests += data.totalRequests
 		Object.keys(data.matches).forEach(function (k) {
-			console.log(k, this.stats.servers[data['port']].matches, data.matches[k])
+			// console.log(k, this.stats.servers[data['port']].matches, data.matches[k])
 			if (this.stats.servers[data['port']].matches == undefined) {
 				this.stats.servers[data['port']].matches = {}
 			}

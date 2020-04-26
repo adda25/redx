@@ -142,11 +142,13 @@ class HttpServer {
 
     _serverCloseHandler () {
         this._server.on('connection', function (socket) {
-          this.sockets.add(socket)
-        
-          this._server.once('close', function () {
-            this.sockets.delete(socket)
-          }.bind(this))
+            this.sockets.add(socket)
+            socket.on('close', function () {
+                this.sockets.delete(socket)
+            }.bind(this))
+            //this._server.once('close', function () {
+            //  this.sockets.delete(socket)
+            //}.bind(this))
         }.bind(this))
     }
 

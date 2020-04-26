@@ -160,6 +160,7 @@ class RedX {
                   console.log(`Master ${process.pid} is running with ${numCPUs} workers`
             )}
             for (let i = 0; i < numCPUs; i++) {
+                this._configureCluster()
                 let worker = cluster.fork()
                 worker.on('message', function(msg) { this._recvMsgFromWorker(msg) }.bind(this))
                 this.workers.push(worker)
@@ -167,6 +168,7 @@ class RedX {
             cluster.on('exit', (worker, code, signal) => {
                 if (cfg.system.debug) {console.log(`worker ${worker.process.pid} died`)}
                 // If a worker die, respawn another
+                this._configureCluster()
                 worker = cluster.fork()
                 let indexToRemove = -1
                 this.workers.some(function (s, index) {
@@ -193,6 +195,14 @@ class RedX {
     // | .__/|_|  |_| \_/ \__,_|\__\___|
     // |_|  
     //
+    _configureCluster () {
+        cluster.setupMaster({
+          exec: __dirname + '/redx.js',
+          args: process.argv.slice(2),
+          silent: false
+        })
+    }
+
     /**
     *   if is master
     */
