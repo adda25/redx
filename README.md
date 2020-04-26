@@ -1,6 +1,7 @@
 # RedX
 
-<img src="https://cloudbackup.trentinosviluppo.it/index.php/s/Wk5iAWLQ2nZXMzX/download" alt="RedX Logo" width="200px">
+<img src="https://webadmin.promfacility.eu/uploads/018e8a986030489ea5fc97190e124277.png" alt="RedX Logo" width="150px">
+
 
 **Vanilla Node.JS Reverse Proxy and Application Server**
 
@@ -449,13 +450,21 @@ service redx status
 As module:
 
 ```sh
-npm i --save @tsadda25/red-x
+npm i --save @tsadda25/redx
+redx start
+redx start file.conf
+redx it
+redx it file.conf
+redx stop
+redx reload
+redx restart
+redx version
 ```
 
 Or globally
 
 ```sh
-npm i -g @tsadda25/red-x
+npm i -g @tsadda25/redx
 ```
 
 ### From source:

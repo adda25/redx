@@ -17,7 +17,7 @@ ExecReload=` + dir + `/redx reload
 ExecRestart=` + dir + `/redx restart
 TimeoutSec=30
 Restart=on-failure
-RestartSec=30
+RestartSec=5
 StartLimitInterval=350
 StartLimitBurst=10
 

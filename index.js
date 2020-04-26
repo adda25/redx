@@ -40,7 +40,7 @@
 
 if (require.main === module) {
     const args = process.argv.slice(2)
-    let forkRedx = function () {
+    const forkRedx = function () {
         let child_process = require('child_process')
         let forker = child_process.fork(__dirname + '/src/redx.js', 
             args, {detached: true, silent: true})
@@ -48,51 +48,53 @@ if (require.main === module) {
         forker.unref()
         process.exit()
     }
-    if ((args.length == 1 || args.length == 2) && args[0] == 'start') {
-        // Start RedX
-        forkRedx()
-    } else if ((args.length == 1 || args.length == 2) && args[0] == 'it') {
-        // Start RedX without forking
+    const ifRedxNotRunning = function (cb) {
         let RedX = require('./src/redx')
         let redx = new RedX(args)
-        redx.start()
-    } else if (args.length == 1 && args[0] == 'reload') {
-        // Reload the server
+        redx.isActive((status) => {
+            if (status === 'No server available') {
+                cb(redx)
+            } else {
+                console.log('Server already running')
+            }
+        })
+    }
+    const ifRedxRunning = function (cb) {
         let RedX = require('./src/redx')
         let redx = new RedX(args)
-        redx.reload()
-    } else if (args.length == 1 && args[0] == 'restart') {
-        // Restart the server
-        let RedX = require('./src/redx')
-        let redx = new RedX(args)
-        redx.killWorkers()
-        setTimeout(function () { forkRedx() }, 2000)
-    } else if (args.length == 1 && args[0] == 'stop') {
-        // Stop the server
-        let RedX = require('./src/redx')
-        let redx = new RedX(args)
-        redx.stop()
+        redx.isActive((status) => {
+            if (status === 'No server available') {
+                console.log('No server available')
+            } else {
+                cb(redx)
+            }
+        })
+    }
+
+    if ((args.length == 1 || args.length == 2) && args[0] == 'start') { // Start RedX
+        ifRedxNotRunning(() => { forkRedx() })
+    } else if ((args.length == 1 || args.length == 2) && args[0] == 'it') { // Start RedX without forking
+        ifRedxNotRunning((redx) => { redx.start() })
+    } else if (args.length == 1 && args[0] == 'reload') { // Reload the server
+        ifRedxRunning((redx) => { redx.reload() })
+    } else if (args.length == 1 && args[0] == 'restart') { // Restart the server
+        ifRedxRunning((redx) => { redx.killWorkers(); setTimeout(function () { forkRedx() }, 2000) })
+    } else if (args.length == 1 && args[0] == 'stop') { // Stop the server
+        ifRedxRunning((redx) => { redx.stop() })
     } else if (args.length == 1 && args[0] == 'status') {
-        let RedX = require('./src/redx')
-        let redx = new RedX(args)
-        redx.status()
+        ifRedxRunning((redx) => { redx.status() })
     } else if (args.length == 1 && args[0] == 'version') {
         console.log(require('./package.json').version)
     } else if (args.length == 2 && args[0] == 'show' && args[1] == 'running-config') {
-        let RedX = require('./src/redx')
-        let redx = new RedX(args)
-        redx.showRunningConfig()
+        ifRedxRunning((redx) => { redx.showRunningConfig() })
     } else if (args.length == 2 && args[0] == 'systemd' && args[1] == 'conf') {
         console.log(require('./src/systemd/create')(process.cwd()))
     } else if (args.length == 2 && args[0] == 'systemd' && args[1] == 'install') {
         let fs = require('fs')
         let systemdConf = require('./src/systemd/create')(process.cwd())
         fs.writeFile('/etc/systemd/system/redx.service', systemdConf, 'utf-8', () => {})
-    } else if (args.length > 1 && args[0] == 'cli') {
-        // Run as cli
-        let RedX = require('./src/redx')
-        let redx = new RedX(args)
-        redx.startCli()   
+    } else if (args.length > 1 && args[0] == 'cli') { // Run as cli
+        ifRedxNotRunning((redx) => { redx.startCli() })
     }
 } else {
     // Run as module

@@ -7,6 +7,7 @@ let stopAction = function () {}
 let statusAction = function () {}
 let killWorkersAction = function () {}
 let showRunningConfigAction = function () {}
+let isActiveAction = function () {}
 
 const server = net.createServer((c) => {
   	c.on('data', (data) => {
@@ -25,6 +26,11 @@ const server = net.createServer((c) => {
   	  			break
   	  		case 'status':
   	  			let st = statusAction(function (st) {
+  	  				c.write(Buffer.from(st))	
+  	  			})
+  	  			break
+  	  		case 'is-active':
+  	  			isActiveAction(function (st) {
   	  				c.write(Buffer.from(st))	
   	  			})
   	  			break
@@ -47,6 +53,7 @@ module.exports = {
 		stopAction = actions.stop
 		statusAction = actions.status
 		killWorkersAction = actions.killWorkers
+		isActiveAction = actions.isActive
 		showRunningConfigAction = actions.showRunningConfig
 		server.listen(port, () => {})
 		server.on('data', (data) => {
@@ -101,6 +108,20 @@ module.exports = {
 		}) 
 		client.on('data', (data) => {
 		  	console.log(data.toString())
+		  	client.end()
+		})
+		client.on('end', () => {})
+	},
+
+	emitIsActive (port, cb) {
+		const client = net.createConnection({ port: port }, () => {
+		  	client.write('is-active')
+		}).on('error', (err) => {
+			//console.log('No server available')
+			cb ('No server available')
+		}) 
+		client.on('data', (data) => {
+			cb (data.toString())
 		  	client.end()
 		})
 		client.on('end', () => {})

@@ -91,6 +91,10 @@ class RedX {
         MasterIPC.emitStatus(this.cfg.ipc.port)
     }
 
+    isActive (cb) {
+        MasterIPC.emitIsActive(this.cfg.ipc.port, cb)
+    }
+
     showRunningConfig () {
         MasterIPC.emitShowRunningConfig(this.cfg.ipc.port)
     }
@@ -140,6 +144,7 @@ class RedX {
                 stop: function () {this._stop()}.bind(this),
                 killWorkers: function () {this._killWorkers()}.bind(this),
                 status: function (cb) {this._status(cb)}.bind(this),
+                isActive: function (cb) {this._status(cb)}.bind(this),
                 showRunningConfig: function (cb) {this._showRunningConfig(cb)}.bind(this)
             })
             if (cfg.stats.enable == 'true' || cfg.stats.enable == true) {
