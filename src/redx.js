@@ -165,14 +165,14 @@ class RedX {
                 worker.on('message', function(msg) { this._recvMsgFromWorker(msg) }.bind(this))
                 this.workers.push(worker)
             }
-            cluster.on('exit', (worker, code, signal) => {
-                if (cfg.system.debug) {console.log(`worker ${worker.process.pid} died`)}
+            cluster.on('exit', (_worker, code, signal) => {
+                if (cfg.system.debug) {console.log(`worker ${_worker.process.pid} died`)}
                 // If a worker die, respawn another
                 this._configureCluster()
-                worker = cluster.fork()
+                let worker = cluster.fork()
                 let indexToRemove = -1
                 this.workers.some(function (s, index) {
-                    if (s.process.pid == worker.process.pid) {
+                    if (s.process.pid == _worker.process.pid) {
                         indexToRemove = index
                         return true
                     }
