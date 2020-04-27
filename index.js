@@ -42,7 +42,7 @@ if (require.main === module) {
     const forkRedx = function () {
         let child_process = require('child_process')
         let forker = child_process.fork(__dirname + '/src/redx.js', 
-            args, {detached: true, silent: true})
+            args, {detached: true, silent: false})
         forker.disconnect()
         forker.unref()
         process.exit()

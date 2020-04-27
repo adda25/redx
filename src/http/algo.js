@@ -3,6 +3,9 @@
 class Algo {
     static Next (remoteIp, _to, balancing) {
         try {
+            if (_to == undefined) {
+                return
+            }
             let to = _to.filter((t) => { return t.available == true})                
             
             function randomInt(min, max) { 

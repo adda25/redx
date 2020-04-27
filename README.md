@@ -352,6 +352,24 @@ proxy amedeosetti.com
 
 CIDR filtering will come soon.
 
+### HTTP Method filtering
+
+Methods specified are case insensitive.
+
+```
+# Allow only GET and HEAD methods
+#
+from *:8080
+allow method get head
+proxy amedeosetti.com
+
+# Allow POST, PUT, DELETE methods
+#
+from *:8080
+deny method post put delete
+proxy amedeosetti.com
+```
+
 <div id="heading--3-9"/>
 
 ### Modify the request headers
@@ -402,8 +420,26 @@ curl --data "10.10.10.10:4000" http://10.10.10.1:8282/redx/register
 curl --data "10.10.10.11:4002" http://10.10.10.1:8282/redx/register
 ```
 
-A Node module in order to automate this procedure for Node's apps will come
-very soon.
+If you want to authenticate the registration, you can set a *secret*,
+like this:
+
+```
+# RedX host IP is: 10.10.10.1
+#
+from *:8282 
+allow register secret YOUR_SUPER_SECRET
+use check time 1
+balance client-ip
+```
+
+and then make the registration request including the secret:
+
+```
+curl --data "10.10.10.10:4000::YOUR_SUPER_SECRET" http://10.10.10.1:8282/redx/register  # => return 200
+curl --data "10.10.10.11:4002" http://10.10.10.1:8282/redx/register # => return 403, because no secret is provided
+```
+
+If your backend is Node app, you can use the module [redx-backend-client](https://github.com/adda25/redx-backend-client) in order to automate this feature.
 
 <div id="heading--4"/>
 

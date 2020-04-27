@@ -2,6 +2,7 @@
 
 const { exec, execFile } = require('child_process')
 let IpFilter = require('./filter/ip-filter')
+let MethodFilter = require('./filter/method-filter')
 let Cache = require('./cache/cache')
 let HttpClient = require('./http/http-client')
 let TcpClient = require('./tcp/tcp-client')
@@ -29,7 +30,7 @@ class Unit {
         this._httpClient = new HttpClient()
         this._tcpClient = new TcpClient()
         this._baseTcpCheck = new BaseTcpCheck()
-        this._filters = { ip: new IpFilter() }
+        this._filters = { ip: new IpFilter(), method: new MethodFilter() }
         this._register = { enabled: false, from: [] }
         this._cacheContainer = new Cache()
         this._checksInterval = undefined
@@ -440,18 +441,30 @@ class Unit {
     */
     _setRegister (args) {
         this._register.enabled = true
-        if (this._protocol == 'tcp') {
-
+        let secret = undefined
+        if (args.length > 2 && args[1] == 'secret') {
+            // We have a secret key
+            secret = args[2]
         }
         this.step(function (x) {
             if (x.req.method == 'POST' && x.req.url == '/redx/register') {
                 console.log('Register request from', x.req.remoteIp(), x.req.url)
                 x.req.parseBody(function (data) {
-                    data = this._unique + '-' + data.toString()
-                    process.send({action: 'register', msg: data, pid: process.pid})
-                    // console.log(data, this._to)
-                    // this.proxy([data], {registered: true})
-                    x.res.finalize()
+                    if (secret !== undefined) {
+                        if (data.toString().split('::').length > 1 && data.toString().split('::')[1] == secret) {
+                            data = this._unique + '-' + data.toString().split('::')[0]
+                            process.send({action: 'register', msg: data, pid: process.pid})
+                            x.res.finalize()
+                        } else {
+                            // not valid secret
+                            x.res.setError(403)
+                            x.res.finalize()
+                        }
+                    } else {
+                        data = this._unique + '-' + data.toString()
+                        process.send({action: 'register', msg: data, pid: process.pid})
+                        x.res.finalize()
+                    }
                 }.bind(this))
             } else {
                 x.next()
