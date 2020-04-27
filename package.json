@@ -1,6 +1,6 @@
 {
   "name": "@tsadda25/redx",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "RedX is a reverse proxy and server running from cli or module",
   "keywords": [
     "reverse proxy",
@@ -12,7 +12,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node __test__/t1.js"
   },
   "repository": {
     "type": "git",

@@ -24,8 +24,23 @@ class HttpClient {
                     console.log(err)
                     x.res.isStream = false
                     x.res.setError(500)
+                    x.next(false)
                 }
             })
+            proxy.on('error', function (e) {
+                console.log(e)
+                x.res.isStream = false
+                x.res.setError(502)
+                x.next(false)
+            })
+            proxy.on('timeout', function () {
+                console.log('timeout')
+                x.res.isStream = false
+                x.res.setError(502)
+                x.next(false)
+                proxy.abort()
+            })
+            proxy.setTimeout(5000)
             x.req.pipe(proxy, {
               end: true
             })

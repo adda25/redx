@@ -210,7 +210,13 @@ class RedX {
         if (msg.action !== undefined && msg.action == 'listen-running-config') {
             this._listenRunningConfig(msg.msg)
         } else {
-            this.workers.forEach(function (w) { w.send(msg) })  
+            this.workers.forEach(function (w) { 
+                if (w.isConnected() && !w.isDead()) {
+                    w.send(msg)     
+                } else {
+                    console.log('not send because die')
+                }
+            })  
         }
     }
 
@@ -278,7 +284,7 @@ class RedX {
                     }.bind(this))
                 } else {
                     // Reload
-                    redx._diff()    
+                    //redx._diff()    
                 }
             }.bind(redx))
         }
