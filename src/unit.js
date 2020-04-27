@@ -447,8 +447,8 @@ class Unit {
             secret = args[2]
         }
         this.step(function (x) {
-            if (x.req.method == 'POST' && x.req.url == '/redx/register') {
-                // console.log('Register request from', x.req.remoteIpIpv4(), x.req.url)
+            const urlToMatch = this._location[this._location.length - 1] == '/' ? this._location + 'redx/register' : this._location + '/redx/register'
+            if (x.req.method == 'POST' && x.req.url == urlToMatch) {
                 x.req.parseBody(function (data) {
                     data = data.toString()
                     if (data.includes('redx-self')) {
@@ -457,6 +457,7 @@ class Unit {
                     if (secret !== undefined) {
                         if (data.split('::').length > 1 && data.split('::')[1] == secret) {
                             data = this._unique + '-' + data.split('::')[0]
+                            console.log(data)
                             process.send({action: 'register', msg: data, pid: process.pid})
                             x.res.finalize()
                         } else {
