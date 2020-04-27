@@ -1,6 +1,6 @@
 {
   "name": "@tsadda25/redx",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "RedX is a reverse proxy and server running from cli or module",
   "keywords": [
     "reverse proxy",

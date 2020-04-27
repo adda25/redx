@@ -448,11 +448,15 @@ class Unit {
         }
         this.step(function (x) {
             if (x.req.method == 'POST' && x.req.url == '/redx/register') {
-                console.log('Register request from', x.req.remoteIp(), x.req.url)
+                // console.log('Register request from', x.req.remoteIpIpv4(), x.req.url)
                 x.req.parseBody(function (data) {
+                    data = data.toString()
+                    if (data.includes('redx-self')) {
+                        data = data.replace('redx-self', x.req.remoteIpIpv4())
+                    }
                     if (secret !== undefined) {
-                        if (data.toString().split('::').length > 1 && data.toString().split('::')[1] == secret) {
-                            data = this._unique + '-' + data.toString().split('::')[0]
+                        if (data.split('::').length > 1 && data.split('::')[1] == secret) {
+                            data = this._unique + '-' + data.split('::')[0]
                             process.send({action: 'register', msg: data, pid: process.pid})
                             x.res.finalize()
                         } else {
@@ -461,7 +465,7 @@ class Unit {
                             x.res.finalize()
                         }
                     } else {
-                        data = this._unique + '-' + data.toString()
+                        data = this._unique + '-' + data
                         process.send({action: 'register', msg: data, pid: process.pid})
                         x.res.finalize()
                     }

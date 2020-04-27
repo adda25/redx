@@ -38,6 +38,18 @@ class HttpExtend {
             return ip
         }
 
+        req.remoteIpIpv4 = () => {
+            let ip = req.headers['x-forwarded-for'] || 
+                req.connection.remoteAddress || 
+                req.socket.remoteAddress ||
+                (req.connection.socket ? req.connection.socket.remoteAddress : null)
+            let splittedIp = ip.split(':')
+            if (splittedIp.length > 1) {
+                ip = splittedIp[splittedIp.length - 1]
+            }
+            return ip
+        }
+
         req.parseQuery = () => {
             if (req.url == undefined) {
                 return {}
