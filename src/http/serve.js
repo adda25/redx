@@ -2,6 +2,7 @@
 
 let fs = require('fs')
 let files = require('../res/files')
+let mime = require('./mime-map')
 
 class Serve {
 
@@ -10,7 +11,6 @@ class Serve {
     	let dir = x.pass.serve.dir
         var filePath = decodeURI(filename)
         try {
-            console.log(filePath)
             if (fs.existsSync(filePath)) {
                 var stat = fs.statSync(filePath)
                 if (!stat.isFile()) {
@@ -22,9 +22,16 @@ class Serve {
                 	}
                 }
                 var readStream = fs.createReadStream(filePath)
+                let fileExtension = filePath.split('.')
+                fileExtension = fileExtension[fileExtension.length - 1]
+                mime[fileExtension]
                 readStream.pipe(x.res)
                 x.res.isStream = true
-                x.res.setHead(200, {'content-length': stat.size})
+                x.res.setHead(200, 
+                    {
+                        'content-length': stat.size,
+                        'content-type': mime[fileExtension] || 'application/octet-stream',
+                    })
                 x.next()
             } else {
                 x.res.setError(404)
@@ -48,7 +55,7 @@ class Serve {
     		_files = _files.map((f) => { return { link: basepath + '/' + f, name: f } })
     		let page = files(basepath, _files)
             x.res.setHead(200, {
-                'Content-Type': 'text/html', //todo
+                'Content-Type': 'text/html',
                 'Content-Length': Buffer.from(page).length
             }, page)
     		x.next()    		

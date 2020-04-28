@@ -129,9 +129,14 @@ class Unit {
         let _stepAction = this._proxyRequest
         switch (to[0]) {
             case 'ssl':
+                let allowInsecure = false
                 to.shift()
+                if (to[0] == 'insecure') {
+                    to.shift()
+                    allowInsecure = true
+                }
                 to.forEach(function (t) { 
-                    let newTo = this._makeTo(t, true)
+                    let newTo = this._makeTo(t, true, allowInsecure)
                     let toInsert = true
                     this._to.forEach(function (ut) {
                         if (ut.unique == newTo.unique) {
@@ -208,9 +213,9 @@ class Unit {
             throw 'Redirect: Not enough arguments'
         }
         this.step(function (x) {
-            x.res.setData({location: newProtocol + newLocation}, '')
-            x.res.setStatusCode(statusCode)
-            x.res.sendBack()
+            // console.log({location: newLocation})
+            x.res.setHead(statusCode, {location: newLocation}, '')
+            x.res.isStream = false
             x.next(false)
         })
         return this
@@ -485,7 +490,7 @@ class Unit {
         }.bind(this))
     }
 
-    _makeTo (to, ssl) {
+    _makeTo (to, ssl, allowInsecure) {
         const _host = to.split(':')[0]
         let _protocol = (ssl == undefined || ssl == false) ? 'http:' : 'https:'
         let _oport = to.split(':').length == 2 ? to.split(':')[1] : (_protocol == 'https:' ? '443' : '80')
@@ -508,7 +513,8 @@ class Unit {
             },
             unique: _protocol + _host + _port + _location,
             available: true,
-            registered: false
+            registered: false,
+            allowInsecure: allowInsecure || false
         }
     }
 
@@ -554,7 +560,8 @@ class Unit {
             headers: x.req.headers,
             insecureHTTPParser: false,
             maxHeaderSize: 81920,
-            setHost: false
+            setHost: false,
+            rejectUnauthorized: !dst.allowInsecure
         }
         x.pass.options = options
         this._httpClient.proxyRequest(x)

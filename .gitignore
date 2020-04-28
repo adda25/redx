@@ -5,3 +5,4 @@ release/*
 certs/*
 *.sh
 *.cfg
+*.conf

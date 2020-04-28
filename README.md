@@ -60,6 +60,8 @@ x.run()
 
   * [3.10. Auto register backends](#heading--3-10)
 
+  * [3.11. Redirect requests] (#heading--3-11)
+
 **[4. Install](#heading--4)**
 	
   * [4.1. Binary / Systemd](#heading--4-1)
@@ -221,6 +223,15 @@ from *:8080
 request set host yourdomain.it 
 request set x-forwarded-proto https
 proxy ssl yourdomain.com
+
+# Proxy to SELF SIGNED or INSECURE https backends
+# This allow MITM attacks, so use only when you
+# know what you are doing
+#
+from *:8080
+request set host yourdomain.it 
+request set x-forwarded-proto https
+proxy ssl insecure yourdomain.com
 ```
 
 <div id="heading--3-3"/>
@@ -243,6 +254,9 @@ proxy tcp 10.10.10.1:1883
 <div id="heading--3-4"/>
 
 ### Serve files
+
+If the MIME type is unknown,
+RedX will return *application/octet-stream*.
 
 ```
 # Serve a dir
@@ -440,6 +454,15 @@ curl --data "10.10.10.11:4002" http://10.10.10.1:8282/redx/register # => return 
 ```
 
 If your backend is Node app, you can use the module [redx-backend-client](https://github.com/adda25/redx-backend-client) in order to automate this feature.
+
+<div id="heading--3-10"/>
+
+### Redirect requests
+
+```
+from yourdomain.com:80
+redirect 302 https://yourdomain.com
+```
 
 <div id="heading--4"/>
 

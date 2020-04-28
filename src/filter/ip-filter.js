@@ -19,12 +19,12 @@ class IpFilter {
             x.next()
             return
         } 
-        const remoteIp = x.req.remoteIp()
+        const remoteIp = x.req.remoteIpIpv4()
         let alreadySent = false
         this._deny.some(function (ip) {
             if (ip == remoteIp) {
                 alreadySent = true
-                x.res.setError(403)
+                x.res.setError(503)
                 x.next(false)
                 return true
             }
@@ -43,7 +43,7 @@ class IpFilter {
             })            
         }
         if (found == false) {
-            x.res.setError(403)
+            x.res.setError(503)
             x.next(false)
         } else {
             x.next()

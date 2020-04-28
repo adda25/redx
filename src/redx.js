@@ -284,7 +284,7 @@ class RedX {
                     }.bind(this))
                 } else {
                     // Reload
-                    //redx._diff()    
+                    redx._diff()    
                 }
             }.bind(redx))
         }
