@@ -60,7 +60,7 @@ x.run()
 
   * [3.10. Auto register backends](#heading--3-10)
 
-  * [3.11. Redirect requests] (#heading--3-11)
+  * [3.11. Redirect requests](#heading--3-11)
 
 **[4. Install](#heading--4)**
 	
