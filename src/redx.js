@@ -196,6 +196,16 @@ class RedX {
     // |_|  
     //
     _configureCluster () {
+        if (this.args !== undefined) {
+            cluster.setupMaster({
+              exec: __dirname + '/redx.js',
+              args: process.argv.slice(2),
+              silent: false
+            })
+        }
+    }
+
+    _configureClusterBreak () {
         cluster.setupMaster({
           exec: __dirname + '/redx.js',
           args: process.argv.slice(2),
