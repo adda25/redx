@@ -455,7 +455,7 @@ curl --data "10.10.10.11:4002" http://10.10.10.1:8282/redx/register # => return 
 
 If your backend is Node app, you can use the module [redx-backend-client](https://github.com/adda25/redx-backend-client) in order to automate this feature.
 
-<div id="heading--3-10"/>
+<div id="heading--3-11"/>
 
 ### Redirect requests
 
