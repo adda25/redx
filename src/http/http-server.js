@@ -24,7 +24,7 @@ class HttpServer {
             setInterval(function () {
                 StatsIPC.emitStat(args.statsPort, JSON.stringify(this._stats))
                 this._resetStats()
-            }.bind(this), 10000)
+            }.bind(this), args.statsFrequency || 10000)
         }
         this.init()
     }

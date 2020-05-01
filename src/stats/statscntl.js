@@ -2,15 +2,7 @@
 
 class StatCollector {
 	constructor () {
-		this.stats = {
-			servers: {},
-			platform: process.platform,
-			process: {
-				memory: process.memoryUsage(),
-				cpu: process.cpuUsage(),
-				uptime: process.uptime()
-			}
-		}
+		this._initStats()
 	}
 
 	add (data) {
@@ -27,7 +19,14 @@ class StatCollector {
 			cpu: process.cpuUsage(),
 			uptime: process.uptime()
 		}
+		Object.values(this.stats.servers).forEach(function (s) {
+			s.requestPerSecond = s.totalRequests / 5
+		}.bind(this))
 		return this.stats
+	}
+
+	reset () {
+		this._initStats()
 	}
 
 	_add (data) {
@@ -53,6 +52,18 @@ class StatCollector {
 			matches: {}
 		}
 	}
+
+	_initStats () {
+		this.stats = {
+			servers: {},
+			platform: process.platform,
+			process: {
+				memory: process.memoryUsage(),
+				cpu: process.cpuUsage(),
+				uptime: process.uptime()
+			}
+		}
+	}
 }
 let collector = new StatCollector()
 
@@ -67,6 +78,10 @@ class Stat {
 
 	get () {
 		return collector.get()
+	}
+
+	reset () {
+		collector._initStats()
 	}
 
 	_updateStats (data) {

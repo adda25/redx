@@ -24,6 +24,12 @@ let ReloadUnit = require('./units/reload')
 let Stats = require('./stats/statscntl')
 
 /**
+*   Eye client in order to send 
+*   status to RedX Eye Server
+*/
+let Eye = require('./eye/eye-client')
+
+/**
 *   External coms, used for 
 *   hot reloads and stats
 */
@@ -52,14 +58,19 @@ class RedX {
         this.units = new Map()
         this.servers = []
         this.serversConfig = []
-        this.cfg = {
-            system: {workers: 1, debug: true, alwaysbind: 80, reload: false},
-            ipc: {port: 60000}, 
-            stats: {enable: true, path: '/redx/stats', port: 60001}
-        }
         this._runningConfig = ''
         this.stats = undefined
         this._bindPorts = []
+        /**
+        *   Everthing in this.cfg is configurable 
+        *   using "configure what key value"
+        */
+        this.cfg = {
+            system: {workers: 1, debug: true, alwaysbind: 80, reload: false},
+            ipc: {port: 60000}, 
+            stats: {enable: true, path: '/redx/stats', port: 60001, frequency: 10000},
+            eye: { enable: false, token: undefined, servers: undefined, frequency: 60000}
+        }
     }
 
     start () {
@@ -107,7 +118,11 @@ class RedX {
         let what = args[0]
         let key = args[1]
         let value = args[2]
-        this.cfg[what][key] = value
+        if (args.length > 3) {
+           this.cfg[what][key] = args.slice(2)
+        } else {
+            this.cfg[what][key] = value    
+        }
         return this
     }
 
@@ -152,6 +167,10 @@ class RedX {
                 StatsIPC.listen(cfg.stats.port, 
                     function (data) {this._updateStats(data)}.bind(this),
                     function () {return this._getStats()}.bind(this))
+            }
+            if (cfg.eye.enable == 'true' || cfg.eye.enable == true) {
+                console.log('Using eye')
+                this.eye = new Eye(this.stats, this.cfg.eye)
             }
             if (cfg.system.workers !== undefined && cfg.system.workers !== 'auto') {
                   numCPUs = cfg.system.workers
@@ -300,6 +319,7 @@ class RedX {
         }
         servers.forEach(function (s) {
             s.statsPort = this.cfg.stats.port
+            s.statsFrequency = this.cfg.stats.frequency
             if (s.protocol.toLowerCase() == 'http' || s.protocol.toLowerCase() == 'https') {
                 redx.servers.push(new HttpServer(s)) 
             } else if (s.protocol.toLowerCase() == 'tcp') {

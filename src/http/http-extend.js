@@ -26,6 +26,19 @@ class HttpExtend {
             })
         }
 
+        req.parseJson = (callback) => {
+            const chunks = []
+            req.on('data', chunk => chunks.push(chunk))
+            req.on('end', () => {
+                try {
+                    const data = JSON.parse(Buffer.concat(chunks).toString())
+                    callback(data)
+                } catch (err) {
+                    callback(err)      
+                }
+            })
+        }
+
         req.setMacro = (macro) => {
             req.macro = macro
         }
